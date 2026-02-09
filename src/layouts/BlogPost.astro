@@ -1,0 +1,43 @@
+---
+const { frontmatter } = Astro.props;
+---
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{frontmatter.title}</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 2rem;
+            background-color: #111;
+            color: #fff;
+            line-height: 1.6;
+        }
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .meta {
+            color: #ccc;
+            margin-bottom: 2rem;
+        }
+        a {
+            color: #fff;
+        }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>{frontmatter.title}</h1>
+      <p class="meta">by {frontmatter.author} on {frontmatter.pubDate.toString().slice(0,10)}</p>
+      <slot />
+      <p><a href="/">← Back to Home</a></p>
+    </main>
+  </body>
+</html>
