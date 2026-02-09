@@ -1,43 +1,153 @@
 ---
+import Layout from './Layout.astro';
+
 const { frontmatter } = Astro.props;
 ---
-<html lang="ja">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>{frontmatter.title}</title>
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            padding: 2rem;
-            background-color: #111;
-            color: #fff;
-            line-height: 1.6;
+
+<Layout title={frontmatter.title}>
+	<article class="blog-post">
+        <header class="post-header">
+            <div class="meta">
+                <span class="category">{frontmatter.category || 'Uncategorized'}</span>
+                <time datetime={frontmatter.pubDate}>{frontmatter.pubDate.toString().slice(0, 10)}</time>
+            </div>
+            <h1>{frontmatter.title}</h1>
+            {frontmatter.image && (
+                <div class="post-image">
+                    <img src={frontmatter.image.url} alt={frontmatter.image.alt} />
+                </div>
+            )}
+        </header>
+
+        <div class="post-content">
+            <slot />
+        </div>
+
+        <div class="post-footer">
+            <a href="/">← Back to Top</a>
+        </div>
+	</article>
+</Layout>
+
+<style>
+    .blog-post {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+
+    .post-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .meta {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 1rem;
+        align-items: center;
+    }
+
+    .category {
+        background-color: #f0f0f0;
+        padding: 0.2rem 0.8rem;
+        border-radius: 4px;
+        font-weight: 600;
+        font-size: 0.8rem;
+    }
+
+    .post-header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        line-height: 1.3;
+        margin-bottom: 2rem;
+        letter-spacing: -0.02em;
+    }
+
+    .post-image img {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    /* Typography & Readability Optimization */
+    .post-content {
+        font-size: 18px; /* Increased base size */
+        line-height: 1.9; /* Relaxed line height */
+        color: #2a2a2a; /* Slightly softer black */
+        font-family: 'Noto Sans JP', sans-serif; /* Readable typeface */
+    }
+
+    .post-content :global(h2) {
+        font-size: 1.8rem;
+        margin-top: 3rem;
+        margin-bottom: 1.5rem;
+        border-bottom: 2px solid #000;
+        padding-bottom: 0.5rem;
+    }
+
+    .post-content :global(h3) {
+        font-size: 1.4rem;
+        margin-top: 2.5rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+    }
+
+    .post-content :global(p) {
+        margin-bottom: 2rem;
+    }
+
+    .post-content :global(ul), .post-content :global(ol) {
+        margin-bottom: 2rem;
+        padding-left: 1.5rem;
+    }
+
+    .post-content :global(li) {
+        margin-bottom: 0.5rem;
+    }
+
+    .post-content :global(strong) {
+        color: #000;
+        font-weight: 700;
+        background: linear-gradient(transparent 60%, #fffacd 60%); /* Content highlight */
+    }
+
+    .post-content :global(blockquote) {
+        border-left: 4px solid #ddd;
+        padding-left: 1rem;
+        margin: 2rem 0;
+        color: #555;
+        font-style: italic;
+    }
+
+    .post-content :global(img) {
+        margin: 2rem 0;
+        border-radius: 4px;
+    }
+
+    .post-footer {
+        margin-top: 4rem;
+        text-align: center;
+        border-top: 1px solid #eee;
+        padding-top: 2rem;
+    }
+    
+    .post-footer a {
+        color: #0056b3;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+        .post-header h1 {
+            font-size: 1.8rem;
         }
-        main {
-            max-width: 800px;
-            margin: 0 auto;
+        .post-content {
+            font-size: 16px;
         }
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-        }
-        .meta {
-            color: #ccc;
-            margin-bottom: 2rem;
-        }
-        a {
-            color: #fff;
-        }
-    </style>
-  </head>
-  <body>
-    <main>
-      <h1>{frontmatter.title}</h1>
-      <p class="meta">by {frontmatter.author} on {frontmatter.pubDate.toString().slice(0,10)}</p>
-      <slot />
-      <p><a href="/">← Back to Home</a></p>
-    </main>
-  </body>
-</html>
+    }
+</style>

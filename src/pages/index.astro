@@ -1,143 +1,202 @@
 ---
+import Layout from '../layouts/Layout.astro';
+
+// 記事を取得 (テスト記事導入前は空になる可能性があるため、後ほど確認)
+const posts = await Astro.glob('./blog/*.md');
+// 日付順にソート
+posts.sort((a, b) => Date.parse(b.frontmatter.pubDate) - Date.parse(a.frontmatter.pubDate));
 ---
 
-<html lang="ja">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>AI Video Engineer Portfolio</title>
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
-		<style>
-			:root {
-				--font-family-base: 'Inter', sans-serif;
-				--color-text: #ffffff;
-				--color-bg-overlay: rgba(0, 0, 0, 0.6);
-			}
-
-			* {
-				box-sizing: border-box;
-				margin: 0;
-				padding: 0;
-			}
-
-			body {
-				font-family: var(--font-family-base);
-				color: var(--color-text);
-				overflow: hidden; /* Prevent scroll */
-				height: 100vh;
-				width: 100vw;
-			}
-
-			.background-video {
-				position: absolute;
-				top: 0;
-				left: 0;
-				width: 100%;
-				height: 100%;
-				object-fit: cover;
-				z-index: -1;
-			}
-
-			.overlay {
-				position: absolute;
-				top: 0;
-				left: 0;
-				width: 100%;
-				height: 100%;
-				background-color: var(--color-bg-overlay);
-				z-index: 0;
-			}
-
-			.content {
-				position: relative;
-				z-index: 1;
-				height: 100%;
-				display: flex;
-				flex-direction: column;
-				justify-content: center;
-				align-items: center;
-				text-align: center;
-				padding: 2rem;
-			}
-
-			h1 {
-				font-size: 4rem;
-				font-weight: 700;
-				letter-spacing: -0.05em;
-				margin-bottom: 1rem;
-				opacity: 0;
-				animation: fadeInDown 1s ease-out forwards;
-			}
-
-			p.subtitle {
-				font-size: 1.5rem;
-				font-weight: 400;
-				opacity: 0;
-				animation: fadeInUp 1s ease-out 0.5s forwards;
-			}
-
-			.cta-button {
-				margin-top: 2rem;
-				padding: 1rem 2rem;
-				font-size: 1rem;
-				font-weight: 700;
-				color: #fff;
-				background: transparent;
-				border: 2px solid #fff;
-				border-radius: 50px;
-				text-decoration: none;
-				transition: all 0.3s ease;
-				opacity: 0;
-				animation: fadeIn 1s ease-out 1s forwards;
-			}
-
-			.cta-button:hover {
-				background: #fff;
-				color: #000;
-			}
-
-			@keyframes fadeInDown {
-				from {
-					opacity: 0;
-					transform: translateY(-20px);
-				}
-				to {
-					opacity: 1;
-					transform: translateY(0);
-				}
-			}
-
-			@keyframes fadeInUp {
-				from {
-					opacity: 0;
-					transform: translateY(20px);
-				}
-				to {
-					opacity: 1;
-					transform: translateY(0);
-				}
-			}
-
-			@keyframes fadeIn {
-				from { opacity: 0; }
-				to { opacity: 1; }
-			}
-		</style>
-	</head>
-	<body>
-		<video class="background-video" autoplay loop muted playsinline>
+<Layout title="Top">
+	<div class="video-header">
+		<video autoplay loop muted playsinline>
 			<source src="/sample1.mp4" type="video/mp4" />
-			Your browser does not support the video tag.
 		</video>
-		<div class="overlay"></div>
-		<main class="content">
-			<h1>KazOnose | AI Video Engineer & Director</h1>
-			<p class="subtitle">Bringing your vision to life with cutting-edge AI technology and professional direction.<br>Reliable, innovative, and future-ready video production.</p>
-			<a href="#" class="cta-button">View Portfolio</a>
-		</main>
-	</body>
-</html>
+        <div class="overlay"></div>
+		<div class="header-content">
+			<h1>KazOnose Media</h1>
+			<p>Future of AI & Visual Technology</p>
+		</div>
+	</div>
+
+	<main class="main-content">
+        <section class="latest-articles">
+            <h2>Latest Articles</h2>
+            <div class="article-grid">
+                {posts.map((post) => (
+                    <article class="article-card">
+                        <a href={post.url}>
+                            <div class="card-image">
+                                {post.frontmatter.image && <img src={post.frontmatter.image.url} alt={post.frontmatter.image.alt} />}
+                                {!post.frontmatter.image && <div class="no-image">No Image</div>}
+                            </div>
+                            <div class="card-content">
+                                <span class="category-tag">{post.frontmatter.category || 'Uncategorized'}</span>
+                                <h3>{post.frontmatter.title}</h3>
+                                <p class="date">{post.frontmatter.pubDate.toString().slice(0, 10)}</p>
+                            </div>
+                        </a>
+                    </article>
+                ))}
+            </div>
+            {posts.length === 0 && <p class="no-posts">現在記事を準備中です。</p>}
+        </section>
+	</main>
+</Layout>
+
+<style>
+	.video-header {
+		position: relative;
+		height: 300px; /* Compact height */
+		overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        text-align: center;
+	}
+
+	.video-header video {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		min-width: 100%;
+		min-height: 100%;
+		width: auto;
+		height: auto;
+		transform: translate(-50%, -50%);
+		z-index: -1;
+        object-fit: cover;
+	}
+
+    .video-header .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 0;
+    }
+
+    .header-content {
+        position: relative;
+        z-index: 1;
+    }
+
+	.header-content h1 {
+		font-size: 3rem;
+		font-weight: 700;
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.05em;
+	}
+
+    .header-content p {
+        font-size: 1.2rem;
+        font-weight: 400;
+        opacity: 0.9;
+    }
+
+	.main-content {
+		max-width: 1200px;
+		margin: 0 auto;
+		padding: 3rem 1rem;
+	}
+
+    .latest-articles h2 {
+        font-size: 1.8rem;
+        margin-bottom: 2rem;
+        border-bottom: 2px solid #000;
+        padding-bottom: 0.5rem;
+        display: inline-block;
+    }
+
+    .article-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+
+    .article-card {
+        background: #fff;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .article-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    }
+
+    .article-card a {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+
+    .card-image {
+        height: 180px;
+        background-color: #f0f0f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    .card-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .no-image {
+        color: #aaa;
+        font-size: 0.9rem;
+    }
+
+    .card-content {
+        padding: 1.5rem;
+    }
+
+    .category-tag {
+        display: inline-block;
+        background-color: #000;
+        color: #fff;
+        font-size: 0.7rem;
+        padding: 0.2rem 0.6rem;
+        border-radius: 20px;
+        margin-bottom: 0.8rem;
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+
+    .article-card h3 {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+        line-height: 1.4;
+        font-weight: 700;
+    }
+
+    .date {
+        font-size: 0.8rem;
+        color: #888;
+        margin-bottom: 0;
+    }
+
+    .no-posts {
+        text-align: center;
+        padding: 2rem;
+        color: #666;
+    }
+
+    @media (max-width: 768px) {
+        .header-content h1 {
+            font-size: 2rem;
+        }
+        .article-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
