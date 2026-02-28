@@ -1,0 +1,13 @@
+---
+// src/pages/blog/[category]/index.astro
+export async function getStaticPaths() {
+  return [
+    { params: { category: 'saas' } },
+    { params: { category: 'hr' } },
+    { params: { category: 'ld' } },
+    { params: { category: 'cs' } },
+  ];
+}
+const { category } = Astro.params;
+---
+<meta http-equiv="refresh" content={`0;url=/blog/${category}/1/`} />

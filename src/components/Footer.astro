@@ -1,0 +1,180 @@
+---
+// src/components/Footer.astro
+const today = new Date();
+---
+
+<footer class="site-footer">
+	<div class="footer-container">
+		<div class="footer-main">
+			
+			<div class="footer-brand">
+				<h2 class="footer-title">AI Strategic Insight</h2>
+				<p class="footer-desc">BtoB企業のコンテンツ資産を最大化する<br>AI動画戦略メディア</p>
+			</div>
+
+			<div class="footer-links">
+				<div class="link-column">
+					<a href="/blog/saas/1/">SaaS/IT</a>
+					<a href="/blog/hr/1/">HR(採用)</a>
+					<a href="/blog/ld/1/">L&D(教育)</a>
+					<a href="/blog/cs/1/">CS(サポート)</a>
+				</div>
+				<div class="link-column">
+					<a href="/about/">運営について</a>
+					<a href="/faq/">よくある質問</a>
+					<a href="/privacy/">プライバシーポリシー</a>
+					<a href="/terms/">利用規約</a>
+				</div>
+			</div>
+
+			<div class="footer-action">
+				<p class="action-title">AI動画化・事業に関するご相談</p>
+				<a href="/contact/" class="action-btn">お問い合わせ</a>
+			</div>
+
+		</div>
+
+		<div class="footer-bottom">
+			<p class="copyright">&copy; {today.getFullYear()} AI Strategic Insight. All rights reserved.</p>
+		</div>
+	</div>
+</footer>
+
+<style>
+	/* 全体の背景と基本設定 */
+	.site-footer {
+		background: #1e293b;
+		color: #fff;
+		padding: 80px 20px 40px 20px;
+		margin-top: auto;
+		width: 100%;
+		box-sizing: border-box;
+	}
+	.footer-container {
+		max-width: 1200px;
+		margin: 0 auto;
+		display: flex;
+		flex-direction: column;
+	}
+
+	/* PC向け 3カラムレイアウト（左・中央・右） */
+	.footer-main {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		gap: 40px;
+		padding-bottom: 60px;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+	}
+
+	/* 左側：ブランド */
+	.footer-brand {
+		flex: 1;
+		min-width: 250px;
+	}
+	.footer-title {
+		font-size: 1.8rem;
+		font-weight: 900;
+		margin: 0 0 16px 0;
+		letter-spacing: -0.02em;
+		color: #fff;
+	}
+	.footer-desc {
+		font-size: 0.95rem;
+		color: #94a3b8;
+		line-height: 1.7;
+		margin: 0;
+		font-weight: 500;
+	}
+
+	/* 中央：リンク群 */
+	.footer-links {
+		display: flex;
+		gap: 80px;
+	}
+	.link-column {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+	}
+	.link-column a {
+		color: #cbd5e1;
+		text-decoration: none;
+		font-size: 0.9rem;
+		font-weight: 600;
+		transition: all 0.2s;
+	}
+	.link-column a:hover {
+		color: #fff;
+		transform: translateX(5px);
+	}
+
+	/* 右側：アクションボタン */
+	.footer-action {
+		flex: 0 0 300px;
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+	}
+	.action-title {
+		font-size: 0.9rem;
+		font-weight: 800;
+		color: #fff;
+		margin: 0;
+	}
+	.action-btn {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+		padding: 16px;
+		border: 2px solid #fff;
+		color: #1e293b;
+		background: #fff;
+		text-decoration: none;
+		font-size: 1rem;
+		font-weight: 800;
+		border-radius: 12px;
+		transition: all 0.2s;
+		box-sizing: border-box;
+	}
+	.action-btn:hover {
+		background: #1e293b;
+		color: #fff;
+		border-color: #fff;
+	}
+
+	/* 最下部：コピーライト */
+	.footer-bottom {
+		padding-top: 40px;
+		text-align: center;
+	}
+	.copyright {
+		font-size: 0.85rem;
+		color: #64748b;
+		margin: 0;
+		font-weight: 500;
+	}
+
+	@media (max-width: 1024px) {
+        .footer-links {
+            gap: 40px;
+        }
+    }
+
+	@media (max-width: 900px) {
+		.footer-main {
+			flex-direction: column;
+			gap: 60px;
+		}
+		.footer-links {
+			width: 100%;
+			justify-content: flex-start;
+			gap: 60px;
+		}
+		.footer-action {
+			width: 100%;
+			flex: auto;
+		}
+	}
+</style>

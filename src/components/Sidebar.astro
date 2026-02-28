@@ -1,0 +1,187 @@
+---
+// src/components/Sidebar.astro
+import { getCollection } from 'astro:content';
+
+const { hidePickup = false } = Astro.props;
+const allPosts = await getCollection('blog');
+
+// Daily AI Insights (News)
+const insightPosts = allPosts
+	.filter(post => post.data.type === 'news')
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 5);
+
+// Pick Up
+const pickupPosts = allPosts
+	.filter(post => post.data.featured === true)
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const displayTags = ["採用動画", "求人動画", "動画マニュアル", "ショート動画", "FAQ", "セキュリティ", "研修"];
+
+const formatCat = (cat) => {
+    if (!cat) return "";
+    const c = cat.toLowerCase();
+    if (c.includes('saas')) return 'SaaS/IT';
+    if (c.includes('hr')) return 'HR(採用)';
+    if (c.includes('ld') || c.includes('l&d')) return 'L&D(教育)';
+    if (c.includes('cs')) return 'CS(サポート)';
+    return cat;
+};
+---
+
+<aside class="sidebar">
+	<div class="widget insights-widget">
+		<h3 class="widget-title">Daily AI Insights</h3>
+		{insightPosts.length > 0 ? (
+			<div class="insight-list">
+				{insightPosts.map((post) => (
+					<div class="insight-item">
+						<a href={`/blog/${post.id.replace(/\.mdx?$/, '')}/`} class="insight-item-link">
+							<time class="insight-date">{post.data.pubDate.toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '.')}</time>
+                            <div class="insight-row">
+                                <div class="insight-image-wrapper">
+                                    <img src={post.data.heroImage || "https://placehold.co/400x225/3e4756/ffffff?text=No+Image"} alt="" />
+                                </div>
+                                <div class="insight-content-wrapper">
+                                    <p class="insight-title">{post.data.title}</p>
+                                </div>
+                            </div>
+						</a>
+					</div>
+				))}
+				<div class="widget-footer">
+					<a href="/news/1/" class="view-all">すべてのニュースを見る ＞</a>
+				</div>
+			</div>
+		) : (
+			<p class="empty-msg">新しいニュースはまだありません。</p>
+		)}
+	</div>
+
+	<div class="sidebar-sticky-section">
+		<div class="widget" id="newsletter-widget">
+			<h3 class="widget-title">Strategic Insight News</h3>
+			<p class="cta-desc">「Article-to-Video」戦略の最新トレンドや、AI動画生成の独自考察を毎週お届けします。</p>
+			<form class="cta-form" id="newsletter-form">
+				<input type="email" placeholder="メールアドレスを入力" required class="newsletter-input" />
+				<button type="submit" class="newsletter-button">無料で購読する</button>
+			</form>
+			<div id="newsletter-success" class="newsletter-success-msg" style="display: none;">
+				<p class="success-title">ご登録ありがとうございます。</p>
+				<p class="success-note">※現在テスト環境のため、実際の登録は行われません。</p>
+			</div>
+		</div>
+
+		{!hidePickup && (
+			<div class="widget">
+				<h3 class="widget-title">Pick Up</h3>
+				<ul class="pickup-list">
+					{pickupPosts.map((post) => (
+						<li>
+							<a href={`/blog/${post.id.replace(/\.mdx?$/, '')}/`}>
+								<span class="pickup-label">{formatCat(post.data.category)}</span>
+								<span class="pickup-text">{post.data.title}</span>
+							</a>
+						</li>
+					))}
+				</ul>
+			</div>
+		)}
+
+		<div class="widget">
+			<h3 class="widget-title">Keywords</h3>
+			<div class="tag-cloud">
+				{displayTags.map((tag) => (
+					<a href={`/tags/${tag}/`}>#{tag}</a>
+				))}
+			</div>
+		</div>
+	</div>
+</aside>
+
+<style>
+	.sidebar { display: flex; flex-direction: column; gap: 30px; }
+	.sidebar-sticky-section { position: sticky; top: 100px; display: flex; flex-direction: column; gap: 30px; }
+	.widget { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+	.widget-title { font-size: 1.1rem; color: #1e293b; margin: 0 0 20px 0; padding-bottom: 12px; border-bottom: 2px solid #f1f5f9; font-weight: 800; }
+	
+	.insights-widget { background: #1e293b; color: #fff; border: none; }
+	.insights-widget .widget-title { color: #fff; border-bottom-color: #334155; }
+	
+	.insight-item { margin-bottom: 20px; }
+    .insight-item:last-child { margin-bottom: 0; }
+	.insight-item-link { text-decoration: none; color: inherit; display: block; }
+	.insight-date { font-size: 0.75rem; color: #94a3b8; display: block; margin-bottom: 6px; }
+	.insight-row { display: flex; gap: 12px; }
+	.insight-image-wrapper { flex: 0 0 80px; aspect-ratio: 16 / 9; border-radius: 4px; overflow: hidden; background: #334155; }
+	.insight-image-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+	.insight-content-wrapper { flex: 1; min-width: 0; }
+	.insight-title { margin: 0; font-size: 0.85rem; line-height: 1.5; color: #f1f5f9; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; font-weight: 500; }
+	
+	.widget-footer { text-align: right; margin-top: 15px; border-top: 1px solid #334155; padding-top: 15px; }
+	.view-all { color: #93c5fd; font-size: 0.75rem; text-decoration: none; font-weight: 600; }
+	.view-all:hover { text-decoration: underline; }
+    .empty-msg { font-size: 0.85rem; color: #94a3b8; margin: 0; }
+
+	.pickup-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 18px; }
+	.pickup-list li { border-bottom: 1px solid #f1f5f9; padding-bottom: 15px; }
+    .pickup-list li:last-child { border-bottom: none; padding-bottom: 0; }
+	.pickup-list a { text-decoration: none; color: inherit; display: flex; flex-direction: column; gap: 8px; }
+	.pickup-label { font-size: 0.7rem; color: #fff; background: #1e293b; padding: 2px 8px; border-radius: 4px; width: max-content; font-weight: 700; }
+	.pickup-text { font-size: 0.95rem; line-height: 1.5; font-weight: 600; color: #334155; }
+    .pickup-list a:hover .pickup-text { color: #0284c7; }
+	
+	.tag-cloud { display: flex; flex-wrap: wrap; gap: 8px; }
+	.tag-cloud a { text-decoration: none; background: #f1f5f9; color: #475569; font-size: 0.8rem; padding: 6px 12px; border-radius: 8px; transition: all 0.2s; font-weight: 500; }
+	.tag-cloud a:hover { background: #e2e8f0; color: #1e293b; }
+
+	/* Newsletter Styles */
+	.cta-desc { font-size: 0.85rem; color: #64748b; margin-bottom: 20px; line-height: 1.6; font-weight: 500; }
+	.cta-form { display: flex; flex-direction: column; gap: 12px; }
+	.newsletter-input { 
+		padding: 12px 16px; 
+		border: 1px solid #e2e8f0; 
+		border-radius: 8px; 
+		font-size: 0.9rem; 
+		background: #f8fafc;
+		color: #1e293b;
+		transition: all 0.2s;
+	}
+	.newsletter-input:focus { outline: none; border-color: #0284c7; background: #fff; box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1); }
+	.newsletter-button { 
+		background: #1e293b; 
+		color: #fff; 
+		border: none; 
+		padding: 12px; 
+		border-radius: 8px; 
+		font-weight: 800; 
+		cursor: pointer; 
+		transition: all 0.2s;
+		font-size: 0.9rem;
+	}
+	.newsletter-button:hover { background: #0f172a; transform: translateY(-1px); }
+	
+	.newsletter-success-msg { text-align: center; padding: 10px 0; animation: fadeIn 0.4s ease-out; }
+	.success-title { color: #10b981; font-weight: 800; margin: 0 0 8px 0; font-size: 0.95rem; }
+	.success-note { font-size: 0.75rem; color: #64748b; margin: 0; line-height: 1.4; }
+
+	@keyframes fadeIn {
+		from { opacity: 0; transform: translateY(10px); }
+		to { opacity: 1; transform: translateY(0); }
+	}
+</style>
+
+<script>
+	const form = document.getElementById('newsletter-form') as HTMLFormElement;
+	const successMsg = document.getElementById('newsletter-success');
+	const desc = document.querySelector('.cta-desc');
+
+	if (form && successMsg) {
+		form.addEventListener('submit', (e) => {
+			e.preventDefault();
+			form.style.display = 'none';
+			if (desc) (desc as HTMLElement).style.display = 'none';
+			successMsg.style.display = 'block';
+		});
+	}
+</script>

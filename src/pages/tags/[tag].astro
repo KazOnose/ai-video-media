@@ -1,0 +1,129 @@
+---
+// src/pages/tags/[tag].astro
+import Layout from '../../layouts/Layout.astro';
+import Sidebar from '../../components/Sidebar.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const allPosts = await getCollection('blog');
+  const articleTags = allPosts.map((post) => post.data.tags || []).flat();
+  const sidebarTags = [
+    "採用動画", "求人動画", "動画マニュアル", "ショート動画", "FAQ", "セキュリティ", "研修"
+  ];
+  const uniqueTags = [...new Set([...articleTags, ...sidebarTags])];
+
+  return uniqueTags.map((tag) => {
+    const filteredPosts = allPosts.filter((post) => post.data.tags?.includes(tag));
+    return {
+      params: { tag },
+      props: { posts: filteredPosts },
+    };
+  });
+}
+
+const { tag } = Astro.params;
+const { posts } = Astro.props;
+const formatCat = (cat: string | undefined) => {
+    if (!cat) return "";
+    const c = cat.toLowerCase();
+    if (c.includes('saas')) return 'SaaS/IT';
+    if (c.includes('hr')) return 'HR(採用)';
+    if (c.includes('ld') || c.includes('l&d')) return 'L&D(教育)';
+    if (c.includes('cs')) return 'CS(サポート)';
+    return cat;
+};
+---
+
+<Layout title={`「${tag}」の記事一覧`} description={`${tag}に関する記事の一覧ページです。`}>
+  <main class="main-container">
+    <nav class="breadcrumb">
+        <a href="/">Top</a> <span class="separator">&gt;</span> <strong class="current">#{tag}</strong>
+    </nav>
+
+    <div class="layout-grid">
+        <div class="main-content-area">
+            <section class="main-board">
+                <header class="archive-header">
+                    <h1 class="archive-title">キーワード：<span>#{tag}</span></h1>
+                    <p class="article-count">{posts.length} 件の記事が見つかりました</p>
+                </header>
+                
+                <div class="post-list">
+                    {posts.map((post) => (
+                        <a href={`/blog/${post.id.replace(/\.mdx?$/, '')}/`} class="post-card">
+                            <div class="image-wrapper">
+                                <img src={post.data.heroImage || "https://placehold.co/600x400?text=No+Image"} alt="" />
+                            </div>
+                            <div class="post-content">
+                                <div class="post-meta">
+                                    <span class="category">{formatCat(post.data.category)}</span>
+                                    <time>{post.data.pubDate.toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/')}</time>
+                                </div>
+                                <h2 class="post-title">{post.data.title}</h2>
+                                <p class="post-description">{post.data.description}</p>
+                            </div>
+                        </a>
+                    ))}
+                </div>
+            </section>
+        </div>
+
+        <Sidebar />
+    </div>
+  </main>
+</Layout>
+
+<style is:global>
+    .main-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 20px;
+    }
+
+    .breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 32px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #64748b;
+    }
+    .breadcrumb a { text-decoration: none; color: #0284c7; }
+    .breadcrumb .separator { color: #cbd5e1; }
+    .breadcrumb .current { color: #1e293b; }
+
+    .layout-grid {
+        display: grid;
+        grid-template-columns: 1fr 320px;
+        gap: 40px;
+    }
+
+    .main-content-area { min-width: 0; }
+    .main-board { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 32px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+
+    .archive-header { margin-bottom: 32px; border-bottom: 4px solid #1e293b; padding-bottom: 12px; }
+    .archive-title { font-size: 1.8rem; font-weight: 900; color: #1e293b; margin: 0 0 8px 0; }
+    .archive-title span { color: #0284c7; }
+    .article-count { font-size: 0.85rem; color: #1e293b; font-weight: 800; border-left: 4px solid #0284c7; padding-left: 10px; margin: 0; }
+
+    .post-list { display: flex; flex-direction: column; gap: 32px; }
+    .post-card { text-decoration: none; color: inherit; display: flex; gap: 24px; border-bottom: 1px solid #f1f5f9; padding-bottom: 32px; transition: all 0.2s; }
+    .post-card:hover { transform: translateX(5px); }
+    .post-card:hover .post-title { color: #0284c7; }
+
+    .image-wrapper { flex: 0 0 240px; aspect-ratio: 16/9; border-radius: 12px; overflow: hidden; background: #f1f5f9; }
+    .image-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+    
+    .post-content { flex: 1; min-width: 0; }
+    .post-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .category { background: #1e293b; color: #fff; font-size: 0.7rem; font-weight: 800; padding: 4px 10px; border-radius: 4px; text-transform: uppercase; }
+    time { color: #64748b; font-size: 0.85rem; font-weight: 600; }
+    
+    .post-title { font-size: 1.25rem; font-weight: 800; line-height: 1.4; margin: 0 0 10px 0; color: #0f172a; }
+    .post-description { font-size: 0.95rem; color: #475569; margin: 0; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+    @media (max-width: 1024px) {
+        .layout-grid { grid-template-columns: 1fr; }
+    }
+</style>

@@ -1,0 +1,172 @@
+---
+// src/pages/blog/[...slug].astro
+import { getCollection, render } from 'astro:content';
+import BlogPost from '../../layouts/BlogPost.astro';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog');
+	return posts.map((post) => ({
+		params: { slug: post.id.replace(/\.mdx?$/, '') },
+		props: post,
+	}));
+}
+
+const post = Astro.props;
+const { Content } = await render(post);
+
+const allPosts = await getCollection('blog');
+const currentTags = post.data.tags || [];
+const currentCategory = post.data.category || "";
+
+const relatedPosts = allPosts
+  .filter((p) => {
+    if (p.id === post.id || p.data.type === 'news') return false;
+    const hasCommonTag = p.data.tags?.some(tag => currentTags.includes(tag));
+    const isSameCategory = p.data.category === currentCategory;
+    return hasCommonTag || isSameCategory;
+  })
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 4);
+
+const pickupPosts = allPosts
+  .filter((p) => p.data.featured === true && p.id !== post.id && p.data.type !== 'news')
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 4);
+
+const formatCat = (cat: string | undefined) => {
+    if (!cat) return "";
+    const c = cat.toLowerCase();
+    if (c.includes('saas')) return 'SaaS/IT';
+    if (c.includes('hr')) return 'HR(採用)';
+    if (c.includes('ld') || c.includes('l&d')) return 'L&D(教育)';
+    if (c.includes('cs')) return 'CS(サポート)';
+    return cat;
+};
+---
+
+<BlogPost {...post.data}>
+	<Content />
+
+	{relatedPosts.length > 0 && (
+		<div class="article-grid-section">
+			<h2 class="article-grid-head">関連記事</h2>
+			<div class="article-grid-flex">
+				{relatedPosts.map((item) => (
+					<a href={`/blog/${item.id.replace(/\.mdx?$/, '')}/`} class="article-grid-card">
+						<div class="article-grid-thumb">
+							<img src={item.data.heroImage || "https://placehold.co/400x225/eee/666?text=No+Image"} alt="" />
+						</div>
+						<div class="article-grid-body">
+							<h3 class="article-grid-title">{item.data.title}</h3>
+							<div class="article-grid-meta">
+								<span class="article-grid-label">{formatCat(item.data.category)}</span>
+								<time>{item.data.pubDate.toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/')}</time>
+							</div>
+						</div>
+					</a>
+				))}
+			</div>
+		</div>
+	)}
+
+	{pickupPosts.length > 0 && (
+		<div class="article-grid-section" style="margin-top: 40px !important;">
+			<h2 class="article-grid-head">Pick Up</h2>
+			<div class="article-grid-flex">
+				{pickupPosts.map((item) => (
+					<a href={`/blog/${item.id.replace(/\.mdx?$/, '')}/`} class="article-grid-card">
+						<div class="article-grid-thumb">
+							<img src={item.data.heroImage || "https://placehold.co/400x225/eee/666?text=No+Image"} alt="" />
+						</div>
+						<div class="article-grid-body">
+							<h3 class="article-grid-title">{item.data.title}</h3>
+							<div class="article-grid-meta">
+								<span class="article-grid-label">{formatCat(item.data.category)}</span>
+								<time>{item.data.pubDate.toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '/')}</time>
+							</div>
+						</div>
+					</a>
+				))}
+			</div>
+		</div>
+	)}
+</BlogPost>
+
+<style>
+	.article-grid-section { 
+		margin-top: 80px !important;
+		padding-top: 40px !important; 
+		border-top: 2px solid #eee !important;
+		text-align: left !important;
+		line-height: 1.4 !important;
+		clear: both !important;
+		font-family: sans-serif !important;
+	}
+	.article-grid-head { 
+		font-size: 1.4rem !important; 
+		font-weight: bold !important; 
+		color: #1e272e !important; 
+		margin: 0 0 25px 0 !important; 
+		padding-bottom: 10px !important;
+		border-bottom: 2px solid #1e272e !important;
+		display: block !important;
+	}
+	.article-grid-flex { 
+		display: grid !important; 
+		grid-template-columns: repeat(2, 1fr) !important;
+		gap: 30px 20px !important; 
+	}
+	.article-grid-card { 
+		display: flex !important; 
+		gap: 15px !important; 
+		text-decoration: none !important; 
+		color: inherit !important;
+		align-items: flex-start !important;
+	}
+	.article-grid-thumb { 
+		flex: 0 0 140px !important; 
+		width: 140px !important; 
+		height: 78px !important; 
+		border-radius: 4px !important;
+		overflow: hidden !important; 
+		background: #eee !important;
+	}
+	.article-grid-thumb img { 
+		width: 100% !important; 
+		height: 100% !important; 
+		object-fit: cover !important;
+		margin: 0 !important; 
+		box-shadow: none !important; 
+	}
+	.article-grid-body { flex: 1 !important; min-width: 0 !important; display: flex !important; flex-direction: column !important;
+	}
+	.article-grid-title { 
+		font-size: 0.95rem !important; 
+		font-weight: bold !important; 
+		margin: 0 0 8px 0 !important; 
+		line-height: 1.4 !important;
+		display: -webkit-box !important;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		color: #1e272e !important;
+	}
+	.article-grid-card:hover .article-grid-title { color: #0984e3 !important; text-decoration: underline !important;
+	}
+	.article-grid-meta { display: flex !important; align-items: center !important; gap: 8px !important; margin-top: auto !important; }
+	.article-grid-label { 
+		font-size: 0.6rem !important;
+		font-weight: bold !important; 
+		border: 1px solid #e2e8f0 !important; 
+		padding: 1px 4px !important; 
+		border-radius: 2px !important; 
+		background: #fff !important;
+		color: #1e272e !important;
+	}
+	.article-grid-meta time { font-size: 0.7rem !important; color: #94a3b8 !important; }
+
+	@media (max-width: 768px) {
+		.article-grid-flex { grid-template-columns: 1fr !important;
+		}
+	}
+</style>

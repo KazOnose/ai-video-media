@@ -1,5 +1,7 @@
 ---
+// src/layouts/Layout.astro
 import '../styles/global.css';
+import Footer from '../components/Footer.astro';
 
 interface Props {
 	title: string;
@@ -17,21 +19,21 @@ const { title, description = "AI技術の知見を発信するテック系オウ
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
         <meta name="description" content={description} />
-		<title>{title} | KazOnose Media</title>
+		<title>{title} | AI Strategic Insight</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
 	</head>
 	<body>
         <header class="site-header">
             <div class="header-container">
-                <a href="/" class="site-title">KazOnose Media</a>
+                <a href="/" class="site-title">AI Strategic Insight</a>
                 <nav class="site-nav">
                     <ul>
-                        <li><a href="/category/saas-automation">SaaS & Automation</a></li>
-                        <li><a href="/category/visuals-media">Visuals & Media</a></li>
-                        <li><a href="/category/hr-education">HR & Education</a></li>
-                        <li><a href="/category/reviews-writing">Reviews & Writing</a></li>
+                        <li><a href="/blog/saas/1/">SaaS/IT</a></li>
+                        <li><a href="/blog/hr/1/">HR(採用)</a></li>
+                        <li><a href="/blog/ld/1/">L&D(教育)</a></li>
+                        <li><a href="/blog/cs/1/">CS(サポート)</a></li>
                     </ul>
                 </nav>
             </div>
@@ -39,18 +41,16 @@ const { title, description = "AI技術の知見を発信するテック系オウ
 
 		<slot />
 
-        <footer class="site-footer">
-            <p>&copy; {new Date().getFullYear()} KazOnose Media. All rights reserved.</p>
-        </footer>
+        <Footer />
 	</body>
 </html>
 
 <style>
     :root {
-        --color-bg: #ffffff;
-        --color-text: #333333;
-        --color-primary: #0056b3;
-        --color-border: #eeeeee;
+        --primary: #1e293b;
+        --accent: #0284c7;
+        --text: #334155;
+        --bg: #f8fafc;
         --header-height: 70px;
     }
 
@@ -58,30 +58,33 @@ const { title, description = "AI技術の知見を発信するテック系オウ
         margin: 0;
         padding: 0;
         font-family: 'Inter', 'Noto Sans JP', sans-serif;
-        background-color: var(--color-bg);
-        color: var(--color-text);
-        padding-top: var(--header-height);
+        background-color: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
     }
 
     .site-header {
-        position: fixed;
+        position: sticky;
         top: 0;
         left: 0;
         width: 100%;
         height: var(--header-height);
-        background-color: rgba(255, 255, 255, 0.95);
-        border-bottom: 1px solid var(--color-border);
+        background-color: #ffffff;
+        border-bottom: 1px solid #e2e8f0;
         z-index: 1000;
         display: flex;
         align-items: center;
-        backdrop-filter: blur(5px);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
 
     .header-container {
         width: 100%;
         max-width: 1200px;
         margin: 0 auto;
-        padding: 0 1rem;
+        padding: 0 20px;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -89,52 +92,36 @@ const { title, description = "AI技術の知見を発信するテック系オウ
 
     .site-title {
         font-size: 1.5rem;
-        font-weight: 700;
+        font-weight: 800;
         text-decoration: none;
-        color: #000;
+        color: var(--primary);
         letter-spacing: -0.02em;
     }
 
     .site-nav ul {
         list-style: none;
         display: flex;
-        gap: 1.5rem;
+        gap: 2rem;
         margin: 0;
         padding: 0;
     }
 
     .site-nav a {
         text-decoration: none;
-        color: #555;
-        font-size: 0.9rem;
-        font-weight: 500;
+        color: #64748b;
+        font-size: 0.95rem;
+        font-weight: 700;
         transition: color 0.2s;
     }
 
     .site-nav a:hover {
-        color: var(--color-primary);
-    }
-
-    .site-footer {
-        background-color: #f8f9fa;
-        padding: 2rem;
-        text-align: center;
-        font-size: 0.8rem;
-        color: #777;
-        margin-top: 4rem;
+        color: var(--accent);
     }
 
     @media (max-width: 768px) {
-        .header-container {
-            flex-direction: column;
-            gap: 0.5rem;
-            padding: 0.5rem;
-        }
-        .site-nav ul {
-            gap: 1rem;
-            font-size: 0.8rem;
-            flex-wrap: wrap;
-            justify-content: center;
+        .site-nav {
+            display: none; /* シンプルにするため一時的に非表示またはハンバーガー等へ */
         }
     }
 </style>
+
