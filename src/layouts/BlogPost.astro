@@ -6,7 +6,7 @@ import type { CollectionEntry } from 'astro:content';
 
 type Props = CollectionEntry<'blog'>['data'];
 
-const { title, description, pubDate, heroImage, category } = Astro.props;
+const { title, description, pubDate, heroImage, category, type } = Astro.props;
 
 const displayDate = pubDate ? new Date(pubDate).toLocaleDateString('ja-JP', {
   year: 'numeric', month: '2-digit', day: '2-digit',
@@ -38,12 +38,17 @@ const getCatSlug = (cat: string | undefined) => {
         <nav class="breadcrumb">
             <a href="/">Top</a> 
             <span class="separator">&gt;</span> 
-            {category && (
+            {type === 'news' ? (
+                <>
+                    <a href="/news/1/">news</a>
+                    <span class="separator">&gt;</span>
+                </>
+            ) : category ? (
                 <>
                     <a href={`/blog/${getCatSlug(category)}/1/`}>{formatCat(category)}</a> 
                     <span class="separator">&gt;</span>
                 </>
-            )} 
+            ) : null}  
             <strong class="current">{title}</strong>
         </nav>
 
@@ -52,7 +57,7 @@ const getCatSlug = (cat: string | undefined) => {
                 <div class="article-card">
                     <header class="article-header">
                         <div class="article-meta">
-                            <span class="article-category">{formatCat(category)}</span>
+                            <span class="article-category">{type === 'news' ? 'news' : formatCat(category)}</span>
                             <time class="article-date">{displayDate}</time>
                         </div>
                         <h1 class="article-title">{title}</h1>
@@ -221,7 +226,7 @@ const getCatSlug = (cat: string | undefined) => {
         color: #0f172a;
         margin: 4rem 0 1.5rem 0;
         padding-bottom: 0.8rem;
-        border-bottom: 4px solid #1e293b; /* Unified with primary navy */
+        border-bottom: 1px solid #1e293b; /* 細く変更（4px -> 1px） */
         display: block;
     }
 
@@ -231,7 +236,7 @@ const getCatSlug = (cat: string | undefined) => {
         color: #1e293b;
         margin: 3.5rem 0 1.25rem 0;
         padding-bottom: 4px;
-        border-bottom: 1px solid #e2e8f0;
+        /* border-bottom: 1px solid #e2e8f0; 削除 */
     }
 
     /* Reduce space after hero image for the first h2 (updated selector) */
