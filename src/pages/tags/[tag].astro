@@ -120,7 +120,7 @@ const formatCat = (cat: string | undefined) => {
     .category { background: #1e293b; color: #fff; font-size: 0.7rem; font-weight: 800; padding: 4px 10px; border-radius: 4px; text-transform: uppercase; }
     time { color: #64748b; font-size: 0.85rem; font-weight: 600; }
     
-    .post-title { font-size: 1.25rem; font-weight: 800; line-height: 1.4; margin: 0 0 10px 0; color: #0f172a; }
+    .post-title { font-size: 1.25rem; font-weight: 800; line-height: 1.4; margin: 0 0 10px 0; color: #0f172a; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     .post-description { font-size: 0.95rem; color: #475569; margin: 0; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
     @media (max-width: 1024px) {
