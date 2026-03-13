@@ -3,7 +3,7 @@ layout: ../../layouts/BlogPost.astro
 title: ITツール導入マニュアルを動画化するメリットとは？作り方や成功のポイントを解説
 slug: it-tool-introduction-manual-video
 description: 社内でのITツール定着には、わかりやすい導入マニュアルが不可欠です。本記事では、紙やPDFのマニュアルを動画化するメリットや、効果的なマニュアル動画の作り方、内製・外注の判断基準などを詳しく解説します。
-heroImage: /blog/it-tool-introduction-manual-video.png
+heroImage: /blog/saas/it-tool-introduction-manual-video.png
 pubDate: 2026-02-18
 updatedDate: 2026-02-18
 category: "SaaS・IT"

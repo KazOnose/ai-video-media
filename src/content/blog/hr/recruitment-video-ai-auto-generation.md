@@ -6,7 +6,7 @@ pubDate: 2026-02-16
 category: "HR(採用)"
 tags: ["採用動画", "AI動画生成", "HeyGen", "Synthesia", "採用DX", "コスト削減"]
 author: "AI Video Media編集部"
-heroImage: /blog/recruitment-video-ai-auto-generation.png
+heroImage: /blog/hr/recruitment-video-ai-auto-generation.png
 ---
 
 採用動画の制作にAIを活用する企業が急増しています。撮影・編集に数十万円かかっていた従来の制作フローが、テキストを入力するだけで完結するようになりつつあるためです。

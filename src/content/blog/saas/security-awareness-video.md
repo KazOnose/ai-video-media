@@ -4,7 +4,7 @@ title: 'セキュリティ事故を防ぐ！従業員に「伝わる」啓発動
 description: '難解なセキュリティ規定が守られない原因は「伝わりにくい」ことにあるかもしれません。動画を活用して従業員の意識を変え、行動を改善するための効果的な啓発動画の作り方を解説します。'
 pubDate: '2026-02-20'
 category: "SaaS・IT"
-heroImage: '/blog/security-awareness-video.png'
+heroImage: '/blog/saas/security-awareness-video.png'
 ---
 
 「セキュリティ規定を作ったのに、誰も読んでくれない」「研修を実施しても、現場の意識が変わらない」

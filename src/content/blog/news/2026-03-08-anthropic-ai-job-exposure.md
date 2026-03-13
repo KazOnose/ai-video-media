@@ -16,7 +16,7 @@ tags: ["AI", "リスキリング", "HR", "L&D", "カスタマーサービス", "
 
 本稿では、Anthropicが指摘した「最もAIに影響される職種」の内容を整理したうえで、HR・L&D部門および経営層が今後の組織設計とリスキリング戦略にどう活かすべきかを考察する。
 
-※出典：Anthropic lists job roles which are most exposed to AI in US（ANI / CBS News, 2026年3月7日）
+*※出典：[Anthropic lists job roles which are most exposed to AI in US](https://www.cbsnews.com/)（ANI / CBS News, 2026年3月7日）*
 
 ## Anthropicの「早期警戒システム」とは何か
 
@@ -117,4 +117,4 @@ HR・L&D部門がすべき最初の一歩は、Anthropicが示したリスク職
 
 AI時代の競争優位は、最先端ツールを持つかどうかではなく、それを使いこなせる人材を組織内にいかに早く育てられるかにかかっている。Anthropicの警鐘を、その育成投資を加速させる好機として活用するべきだろう。
 
-※出典：Anthropic lists job roles which are most exposed to AI in US（ANI / CBS News, 2026年3月7日）
+*※出典：[Anthropic lists job roles which are most exposed to AI in US](https://www.cbsnews.com/)（ANI / CBS News, 2026年3月7日）*
